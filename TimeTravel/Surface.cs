@@ -22,10 +22,16 @@ namespace TimeTravel
         { return _startCoordinate; }
 
         public Surface(Coordinate roomPosition, Dictionary<string, Sprite> sprites, Coordinate startCoordinate, Coordinate endCoordinate)
-            : base(roomPosition, true, null, sprites)
+            : base(roomPosition, sprites)
         {
             _endCoordinate = endCoordinate;
             _startCoordinate = startCoordinate;
+        }
+
+        public override void setStartingSprite()
+        {
+            if (getSpriteFromDict("start") != null)
+            { setCurrentSprite("start"); }
         }
 
         public override void draw(SpriteBatch spriteBatch)
@@ -33,8 +39,7 @@ namespace TimeTravel
             if (getCurrentSprite() != null)
             {
                 spriteBatch.Draw(getCurrentSprite().getImage(),
-                    new Vector2((int)(getRoomPosition().getX() - _startCoordinate.getX()), 
-                        (int)(getRoomPosition().getY() - _startCoordinate.getY())), Color.White);
+                    new Vector2((int)(getRoomPosition().getX()), (int)(getRoomPosition().getY())), Color.White);
             }
         }
     }

@@ -11,7 +11,14 @@ namespace TimeTravel
         public int getRadius()
         { return _radius; }
 
-        public BoundingCircle(int radius)
-        { _radius = radius; }
+        private Coordinate _center;
+        public Coordinate getCenter()
+        { return _center; }
+
+        public BoundingCircle(int radius, Coordinate center)
+        {
+            _radius = radius;
+            _center = center;
+        }
     }
 }

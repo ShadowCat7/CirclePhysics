@@ -50,17 +50,29 @@ namespace TimeTravel
             tempDict = new Dictionary<string, Sprite>();
             tempDict.Add("start", new Sprite(Content.Load<Texture2D>("surface")));
             ImageHandler.surface = tempDict;
+            tempDict = new Dictionary<string, Sprite>();
+            tempDict.Add("right", null);
+            ImageHandler.gun = tempDict;
+            tempDict = new Dictionary<string, Sprite>();
+            tempDict.Add("start", null);
+            ImageHandler.bullet = tempDict;
 
-            List<Entity> entities = new List<Entity>();
-            entities.Add(new StaticEntity(new Coordinate(200, 200), true, new BoundingCircle(31), ImageHandler.wall));
+            List<StaticEntity> entities = new List<StaticEntity>();
+            entities.Add(new StaticEntity(new Coordinate(200, 130), true, 32, ImageHandler.wall));
 
             List<Surface> surfaces = new List<Surface>();
 
-            surfaces.Add(new Surface(new Coordinate(0, 480), null, new Coordinate(0, 0), new Coordinate(800, 0)));
-            surfaces.Add(new Surface(new Coordinate(500, 480), ImageHandler.surface, new Coordinate(0, 0), new Coordinate(200, -50)));
+            surfaces.Add(new Surface(new Coordinate(0, 300), null, new Coordinate(0, 0), new Coordinate(800, 0)));
+            surfaces.Add(new Surface(new Coordinate(0, 240), null, new Coordinate(0, 0), new Coordinate(400, 0)));
+            //surfaces.Add(new Surface(new Coordinate(400, 300), ImageHandler.surface, new Coordinate(0, 0), new Coordinate(180, 180)));
 
-            currentRoom = new GameRoom(new Coordinate(800, 480), ImageHandler.wall["start"], entities, 
-                new Player(new Coordinate(0, 0), new BoundingCircle(31), ImageHandler.player), surfaces);
+            BoundingCircle[] boundingCircles = new BoundingCircle[2];
+            boundingCircles[0] = new BoundingCircle(16, new Coordinate(15.5, 15.5));
+            boundingCircles[1] = new BoundingCircle(16, new Coordinate(15.5, 47.5));
+
+            currentRoom = new GameRoom(new Coordinate(1600, 480), ImageHandler.wall["start"],
+                new Player(new Coordinate(0, 0), boundingCircles, ImageHandler.player, new Gun(new Coordinate(0, 0), ImageHandler.gun, 
+                    new Bullet(new Coordinate(0, 0), 2, ImageHandler.bullet, 300, 0, 1, 100))), entities, surfaces);
         }
 
         protected override void UnloadContent() { }

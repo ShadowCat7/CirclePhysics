@@ -17,19 +17,18 @@ namespace TimeTravel
         public Coordinate getSize()
         { return _size; }
 
-        private List<Entity> _entityList;
-        public List<Entity> getEntityList()
-        { return _entityList; }
+        //private List<MenuItem> _menuItems;
+        //public List<MenuItem> getMenuItems()
+        //{ return _menuItems; }
 
         private Sprite _background;
         public Sprite getBackground()
         { return _background; }
 
-        public Room(Coordinate size, Sprite background, List<Entity> entityList)
+        public Room(Coordinate size, Sprite background)
         {
             _size = size;
             _background = background;
-            _entityList = entityList;
         }
 
         public virtual void update(GameTime gameTime, KeyboardState newKeyboardState, KeyboardState oldKeyboardState, 

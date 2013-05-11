@@ -19,12 +19,15 @@ namespace TimeTravel
 
         private bool _paused;
 
+        private List<StaticEntity> _entityList;
+
         private List<Surface> _surfaces;
 
-        public GameRoom(Coordinate size, Sprite background, List<Entity> entityList, Player player, List<Surface> surfaces)
-            : base(size, background, entityList)
+        public GameRoom(Coordinate size, Sprite background, Player player, List<StaticEntity> entityList, List<Surface> surfaces)
+            : base(size, background)
         {
             _player = player;
+            _entityList = entityList;
             _surfaces = surfaces;
 
             _onScreen = new Coordinate(0, 0);
@@ -34,65 +37,86 @@ namespace TimeTravel
         public override void update(GameTime gameTime, KeyboardState newKeyboardState, KeyboardState oldKeyboardState, 
             MouseState newMouseState, MouseState oldMouseState)
         {
-            List<Entity> entityList = getEntityList();
+            if (newKeyboardState.IsKeyDown(Keys.Escape))
+            { _paused = !_paused; }
 
-            for (int k = 0; k < 10; ++k)
+            if (!_paused)
             {
-                for (int i = 0; i < entityList.Count; i++)
+                for (int k = 0; k < 10; ++k)
                 {
-                    entityList[i].update();
-                    entityList[i].update(gameTime, entityList, _surfaces);
+                    for (int i = 0; i < _entityList.Count; i++)
+                    {
+                        _entityList[i].update(gameTime);
+                        _entityList[i].update(gameTime, _entityList, _surfaces);
+                    }
+
+                    _player.update(gameTime, newKeyboardState, oldKeyboardState, newMouseState, oldMouseState, _entityList, _surfaces);
                 }
 
-                _player.update(gameTime, newKeyboardState, oldKeyboardState, newMouseState, oldMouseState, entityList, _surfaces);
+                _player.setScreenPosition(getScreenPositionFromEntity(_player));
+
+                for (int i = 0; i < _entityList.Count; ++i)
+                { _entityList[i].setScreenPosition(_onScreen); }
+
+                for (int i = 0; i < _surfaces.Count; ++i)
+                { _surfaces[i].setScreenPosition(_onScreen); }
             }
-
-            getScreenPositionFromEntity(_player);
-
-            _player.setScreenPosition(_onScreen);
-
-            for (int i = 0; i < entityList.Count; ++i)
-            { entityList[i].setScreenPosition(_onScreen); }
-
-            for (int i = 0; i < _surfaces.Count; ++i)
-            { _surfaces[i].setScreenPosition(_onScreen); }
         }
 
         public override void draw(SpriteBatch spriteBatch)
         {
-            List<Entity> entityList = getEntityList();
-
             //TODO background
 
             for (int i = 0; i < _surfaces.Count; ++i)
             { _surfaces[i].draw(spriteBatch); }
 
-            for (int i = 0; i < entityList.Count; ++i)
-            { entityList[i].draw(spriteBatch); }
+            for (int i = 0; i < _entityList.Count; ++i)
+            { _entityList[i].draw(spriteBatch); }
 
             _player.draw(spriteBatch);
         }
 
-        public void getScreenPositionFromEntity(Entity entity)
+        public Coordinate getScreenPositionFromEntity(StaticEntity entity)
         {
             double x = 0;
             double y = 0;
+            double ex = 0;
+            double ey = 0;
 
-            if (entity.getRoomPosition().getX() < Screen.X / 2)
-            { x = 0; }
-            else if (entity.getRoomPosition().getX() > getSize().getX() - Screen.X / 2)
-            { x = getSize().getX() - Screen.X; }
+            if (entity.getRoomPosition().getX() + entity.getBigBoundingCircle().getRadius() / 2 < Screen.X / 2)
+            {
+                x = 0;
+                ex = entity.getRoomPosition().getX();
+            }
+            else if (entity.getRoomPosition().getX() + entity.getBigBoundingCircle().getRadius() / 2 > getSize().getX() - Screen.X / 2)
+            {
+                x = getSize().getX() - Screen.X;
+                ex = entity.getRoomPosition().getX() - (getSize().getX() - Screen.X);
+            }
             else
-            { x = entity.getRoomPosition().getX() - Screen.X / 2; }
+            {
+                x = entity.getRoomPosition().getX() + entity.getBigBoundingCircle().getRadius() / 2 - Screen.X / 2;
+                ex = Screen.X / 2 - entity.getBigBoundingCircle().getRadius() / 2;
+            }
 
-            if (entity.getRoomPosition().getY() < Screen.Y / 2)
-            { y = 0; }
-            else if (entity.getRoomPosition().getY() > getSize().getY() - Screen.Y / 2)
-            { y = getSize().getY() - Screen.Y; }
+            if (entity.getRoomPosition().getY() + entity.getBigBoundingCircle().getRadius() / 2 < Screen.Y / 2)
+            {
+                y = 0;
+                ey = entity.getRoomPosition().getY();
+            }
+            else if (entity.getRoomPosition().getY() + entity.getBigBoundingCircle().getRadius() / 2 > getSize().getY() - Screen.Y / 2)
+            {
+                y = getSize().getY() - Screen.Y;
+                ey = entity.getRoomPosition().getY() - getSize().getY() + Screen.Y;
+            }
             else
-            { y = entity.getRoomPosition().getY() - Screen.Y / 2; }
+            {
+                y = entity.getRoomPosition().getY() + entity.getBigBoundingCircle().getRadius() / 2 - Screen.Y / 2;
+                ey = Screen.Y / 2 - entity.getBigBoundingCircle().getRadius() / 2;
+            }
 
             _onScreen = new Coordinate(x, y);
+            return new Coordinate(ex, ey);
         }
     }
 }

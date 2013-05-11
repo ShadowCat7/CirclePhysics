@@ -11,73 +11,65 @@ using Microsoft.Xna.Framework.Media;
 
 namespace TimeTravel
 {
-    public abstract class Entity
+    public abstract class Entity : Overlay
     {
         private Coordinate _roomPosition;
         public Coordinate getRoomPosition()
         { return _roomPosition; }
 
-        private Coordinate _screenPosition;
-        public Coordinate getScreenPosition()
-        { return _screenPosition; }
-        public void setScreenPosition(Coordinate positionOfScreen)
-        {
-            _screenPosition = new Coordinate(_roomPosition.getX() - positionOfScreen.getX(), _roomPosition.getY() - positionOfScreen.getY());
-            //TODO onScreen?
-        }
-
         private bool _onScreen;
         public bool getOnScreen()
         { return _onScreen; }
 
-        private bool _solid;
-        public bool getSolid()
-        { return _solid; }
-
-        private BoundingCircle _boundingCircle;
-        public int getBoundingRadius()
-        { return _boundingCircle.getRadius(); }
-
-        private Dictionary<string, Sprite> _sprites;
-        public Sprite getSpriteFromDict(string spriteTag)
-        { return _sprites[spriteTag]; }
-
-        private Sprite _sprite;
-        public Sprite getCurrentSprite()
-        { return _sprite; }
-        public void setCurrentSprite(Sprite sprite)
-        { _sprite = sprite; }
-
         public Entity(Coordinate roomPosition, Dictionary<string, Sprite> sprites)
-        {
-            _roomPosition = roomPosition;
-            _sprites = sprites;
-
-            _boundingCircle = null;
-            _solid = false;
-            _sprite = sprites["start"];
-        }
-        public Entity(Coordinate roomPosition, bool solid, BoundingCircle boundingCircle, Dictionary<string, Sprite> sprites)
-        {
-            _roomPosition = roomPosition;
-            _solid = solid;
-            _boundingCircle = boundingCircle;
-            _sprites = sprites;
-
-            if (sprites != null)
-            { _sprite = sprites["start"]; }
-        }
+            : base(null, sprites)
+        { _roomPosition = roomPosition; }
 
         protected virtual void move(Coordinate newPosition)
         { _roomPosition = newPosition; }
-        public virtual void update() { }
-        public virtual void update(GameTime gameTime, List<Entity> entityList, List<Surface> surfaces) { }
-        public virtual void update(GameTime gameTime, KeyboardState newKeyboardState, KeyboardState oldKeyboardState,
-            MouseState newMouseState, MouseState oldMouseState, List<Entity> entityList, List<Surface> surfaces) { }
-        public virtual void draw(SpriteBatch spriteBatch)
+
+        public override void setScreenPosition(Coordinate positionOfScreen)
         {
-            spriteBatch.Draw(_sprite.getImage(), 
-                new Vector2((int)_roomPosition.getX() - _boundingCircle.getRadius(), (int)_roomPosition.getY() - _boundingCircle.getRadius()), Color.White);
+            base.setScreenPosition(new Coordinate(_roomPosition.getX() - positionOfScreen.getX(), _roomPosition.getY() - positionOfScreen.getY()));
+
+            if (getCurrentSprite() != null)
+            {
+                if (getRoomPosition().getX() > positionOfScreen.getX() + Screen.X)
+                { _onScreen = false; }
+                else if (getRoomPosition().getY() > positionOfScreen.getY() + Screen.Y)
+                { _onScreen = false; }
+                else if (getRoomPosition().getX() + getCurrentSprite().getImage().Bounds.Width < positionOfScreen.getX())
+                { _onScreen = false; }
+                else if (getRoomPosition().getY() + getCurrentSprite().getImage().Bounds.Height < positionOfScreen.getY())
+                { _onScreen = false; }
+                else
+                { _onScreen = true; }
+            }
+            else
+            {
+                if (getRoomPosition().getX() > positionOfScreen.getX() + Screen.X)
+                { _onScreen = false; }
+                else if (getRoomPosition().getY() > positionOfScreen.getY() + Screen.Y)
+                { _onScreen = false; }
+                else if (getRoomPosition().getX() < positionOfScreen.getX())
+                { _onScreen = false; }
+                else if (getRoomPosition().getY() < positionOfScreen.getY())
+                { _onScreen = false; }
+                else
+                { _onScreen = true; }
+            }
         }
+
+        protected virtual void setPlayerScreenPosition(Coordinate screenPosition)
+        {
+            _onScreen = true;
+            base.setScreenPosition(screenPosition);
+        }
+
+        public virtual void damaged(int damage)
+        { }
+
+        public virtual void update(GameTime gameTime) { }
+        public virtual void update(GameTime gameTime, List<StaticEntity> entityList, List<Surface> surfaces) { }
     }
 }

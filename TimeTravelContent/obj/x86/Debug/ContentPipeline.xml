@@ -8,7 +8,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Attridge\programs\TimeTravel\TimeTravel\bin\x86\Debug\Content\player.xnb</Output>
-      <Time>2013-04-21T23:14:45.2161188-07:00</Time>
+      <Time>2013-05-06T18:01:14.7373611-07:00</Time>
     </Item>
     <Item>
       <Source>wall.png</Source>
@@ -34,10 +34,10 @@
       <TargetProfile>HiDef</TargetProfile>
       <BuildConfiguration>Debug</BuildConfiguration>
       <CompressContent>false</CompressContent>
-      <RootDirectory>C:\Users\Attridge\Programs\TimeTravel\TimeTravelContent\</RootDirectory>
-      <LoggerRootDirectory>C:\Users\Attridge\Programs\TimeTravel\TimeTravel\</LoggerRootDirectory>
-      <IntermediateDirectory>C:\Users\Attridge\Programs\TimeTravel\TimeTravelContent\obj\x86\Debug\</IntermediateDirectory>
-      <OutputDirectory>C:\Users\Attridge\Programs\TimeTravel\TimeTravel\bin\x86\Debug\Content\</OutputDirectory>
+      <RootDirectory>C:\Users\Attridge\programs\TimeTravel\TimeTravelContent\</RootDirectory>
+      <LoggerRootDirectory>C:\Users\Attridge\programs\TimeTravel\TimeTravel\</LoggerRootDirectory>
+      <IntermediateDirectory>C:\Users\Attridge\programs\TimeTravel\TimeTravelContent\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>C:\Users\Attridge\programs\TimeTravel\TimeTravel\bin\x86\Debug\Content\</OutputDirectory>
     </Settings>
     <Assemblies>
       <Assembly>
