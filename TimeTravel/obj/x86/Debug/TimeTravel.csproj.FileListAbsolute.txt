@@ -1,9 +1,0 @@
-C:\Users\Attridge\Programs\TimeTravel\TimeTravel\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\Users\Attridge\Programs\TimeTravel\TimeTravel\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
-C:\Users\Attridge\Programs\TimeTravel\TimeTravel\bin\x86\Debug\TimeTravel.exe
-C:\Users\Attridge\Programs\TimeTravel\TimeTravel\bin\x86\Debug\TimeTravel.pdb
-C:\Users\Attridge\Programs\TimeTravel\TimeTravel\obj\x86\Debug\TimeTravel.exe
-C:\Users\Attridge\Programs\TimeTravel\TimeTravel\obj\x86\Debug\TimeTravel.pdb
-C:\Users\Attridge\programs\TimeTravel\TimeTravel\bin\x86\Debug\Content\player.xnb
-C:\Users\Attridge\programs\TimeTravel\TimeTravel\bin\x86\Debug\Content\wall.xnb
-C:\Users\Attridge\Programs\TimeTravel\TimeTravel\bin\x86\Debug\Content\surface.xnb
