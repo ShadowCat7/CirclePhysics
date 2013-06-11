@@ -1,39 +1,20 @@
-﻿using CirclePhysics.Graphics;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using CirclePhysics.Graphics.Interfaces;
+using CirclePhysics.Physics;
+using CirclePhysics.Physics.Interfaces;
 using System.Collections.Generic;
 
 namespace CirclePhysics.Entity
 {
-	public class Surface : Entity
+	public class Surface : CollisionObject, ISurface
 	{
-		private Coordinate _endCoordinate;
-		public Coordinate EndCoordinate { get { return _endCoordinate; } }
+		public Coordinate EndCoordinate { get; private set; }
+		public Coordinate StartCoordinate { get; private set; }
 
-		private Coordinate _startCoordinate;
-		public Coordinate StartCoordinate { get { return _startCoordinate; } }
-
-		public Surface(Coordinate roomPosition, Dictionary<string, Sprite> sprites, Coordinate startCoordinate, Coordinate endCoordinate)
-			: base(roomPosition, sprites)
+		public Surface(Coordinate roomPosition, Dictionary<string, ISprite> sprites, string startingSprite, Coordinate startCoordinate, Coordinate endCoordinate)
+			: base(roomPosition, sprites, startingSprite)
 		{
-			_endCoordinate = endCoordinate;
-			_startCoordinate = startCoordinate;
-		}
-
-		public override void SetStartingSprite()
-		{
-			if (getSpriteFromDict("start") != null)
-			{
-				SetCurrentSprite("start");
-			}
-		}
-
-		public override void Draw(SpriteBatch spriteBatch)
-		{
-			if (GetCurrentSprite() != null)
-			{
-				spriteBatch.Draw(GetCurrentSprite().Image, new Vector2((int)(RoomPosition.getX()), (int)(RoomPosition.getY())), Color.White);
-			}
+			EndCoordinate = endCoordinate;
+			StartCoordinate = startCoordinate;
 		}
 	}
 }

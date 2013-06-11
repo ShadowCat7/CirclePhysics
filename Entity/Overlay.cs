@@ -1,46 +1,39 @@
-﻿using CirclePhysics.Graphics;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using CirclePhysics.Graphics.Interfaces;
+using CirclePhysics.Physics;
 
 namespace CirclePhysics.Entity
 {
-	public abstract class Overlay
+	public class Overlay : IOverlay
 	{
-		private Coordinate _screenPosition;
-		public Coordinate getScreenPosition()
-		{ return _screenPosition; }
-		public virtual void SetScreenPosition(Coordinate screenPosition)
-		{ _screenPosition = screenPosition; }
-
-		private Dictionary<string, Sprite> _sprites;
-		public Dictionary<string, Sprite> Sprites { get { return _sprites; } }
-		public Sprite getSpriteFromDict(string spriteTag)
+		public Overlay(Coordinate screenPosition, Dictionary<string, ISprite> sprites, string startingSprite)
 		{
-			if (_sprites == null || _sprites.ContainsKey(spriteTag))
+			ScreenPosition = screenPosition;
+			Sprites = sprites;
+			CurrentSprite = Sprites[startingSprite];
+		}
+
+		// Fields
+		public Coordinate ScreenPosition { get; private set; }
+		public virtual void SetScreenPosition(Coordinate positionOfScreen) { }
+
+		public Dictionary<string, ISprite> Sprites { get; private set; }
+		public ISprite GetSpriteFromDict(string spriteTag)
+		{
+			if (Sprites == null || Sprites.ContainsKey(spriteTag))
 			{ return null; }
 
-			return _sprites[spriteTag];
+			return Sprites[spriteTag];
 		}
 
-		private Sprite _sprite;
-		public Sprite GetCurrentSprite()
-		{ return _sprite; }
+		public ISprite CurrentSprite { get; private set; }
 		public void SetCurrentSprite(string key)
-		{ _sprite = _sprites[key]; }
+		{ CurrentSprite = Sprites[key]; }
 
-		public Overlay(Coordinate screenPosition, Dictionary<string, Sprite> sprites)
-		{
-			_screenPosition = screenPosition;
-			_sprites = sprites;
+		// Methods
+		public virtual void Draw(IDrawer drawer)
+		{ CurrentSprite.Draw(drawer); }
 
-			_sprite = null;
-			SetStartingSprite();
-		}
-
-		public abstract void SetStartingSprite();
-
-		public virtual void Draw(SpriteBatch spriteBatch)
-		{ spriteBatch.Draw(_sprite.Image, new Vector2((int)_screenPosition.getX(), (int)_screenPosition.getY()), Color.White); }
+		public virtual void Update() {}
 	}
 }

@@ -1,6 +1,5 @@
-﻿using CirclePhysics.Graphics;
+﻿using CirclePhysics.Graphics.Interfaces;
 using CirclePhysics.Physics;
-using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
@@ -8,22 +7,12 @@ namespace CirclePhysics.Entity
 {
 	public class MovingEntity : StaticEntity
 	{
-		private bool _isOnGround;
-		public bool IsOnGround
-		{
-			get
-			{ return _isOnGround; }
-			protected set
-			{ _isOnGround = value; }
-		}
+		public bool IsOnGround { get; protected set; }
+		public int TopSpeed { get; private set; }
 
-		private int _topSpeed;
-		public int TopSpeed { get { return _topSpeed; } }
-
-		private GameVector _velocity;
-		public GameVector Velocity { get { return _velocity; } }
+		public GameVector Velocity { get; private set; }
 		protected void AddVelocity(GameVector velocity)
-		{ _velocity += velocity; }
+		{ Velocity += velocity; }
 
 		private double _friction;
 		public double Friction { get { return _friction; } }
@@ -31,74 +20,74 @@ namespace CirclePhysics.Entity
 		private bool _isGravityOn;
 		public bool IsGravityOn { get { return _isGravityOn; } }
 
-		public MovingEntity(Coordinate roomPosition, Dictionary<string, Sprite> sprites, int topSpeed)
-			: base(roomPosition, sprites)
+		public MovingEntity(Coordinate roomPosition, Dictionary<string, ISprite> sprites, string startingSprite, int topSpeed)
+			: base(roomPosition, sprites, startingSprite)
 		{
-			_topSpeed = topSpeed;
+			TopSpeed = topSpeed;
 
-			_velocity = new GameVector(0, 0);
+			Velocity = new GameVector(0, 0);
 			_friction = -1;
 			_isGravityOn = false;
 		}
 
-		public MovingEntity(Coordinate roomPosition, bool solid, int radius, Dictionary<string, Sprite> sprites, int topSpeed)
-			: base(roomPosition, solid, radius, sprites)
+		public MovingEntity(Coordinate roomPosition, Dictionary<string, ISprite> sprites, string startingSprite, bool solid, int radius, int topSpeed)
+			: base(roomPosition, sprites, startingSprite, solid, radius)
 		{
-			_topSpeed = topSpeed;
+			TopSpeed = topSpeed;
 
-			_velocity = new GameVector(0, 0);
+			Velocity = new GameVector(0, 0);
 			_friction = -1;
 			_isGravityOn = false;
 		}
 
-		public MovingEntity(Coordinate roomPosition, bool solid, BoundingCircle[] boundingCircles, Dictionary<string, Sprite> sprites, int topSpeed)
-			: base(roomPosition, solid, boundingCircles, sprites)
+		public MovingEntity(Coordinate roomPosition, Dictionary<string, ISprite> sprites, string startingSprite, bool solid, BoundingCircle[] boundingCircles, int topSpeed)
+			: base(roomPosition, sprites, startingSprite, solid, boundingCircles)
 		{
-			_topSpeed = topSpeed;
+			TopSpeed = topSpeed;
 
-			_velocity = new GameVector(0, 0);
+			Velocity = new GameVector(0, 0);
 			_friction = -1;
 			_isGravityOn = false;
 		}
 
-		public MovingEntity(Coordinate roomPosition, int radius, Dictionary<string, Sprite> sprites,
+		public MovingEntity(Coordinate roomPosition, Dictionary<string, ISprite> sprites, string startingSprite, int radius,
 			int topSpeed, double friction, bool isGravityOn)
-			: base(roomPosition, true, radius, sprites)
+			: base(roomPosition, sprites, startingSprite, true, radius)
 		{
-			_topSpeed = topSpeed;
+			TopSpeed = topSpeed;
 			_friction = friction;
 			_isGravityOn = isGravityOn;
 
-			_velocity = new GameVector(0, 0);
+			Velocity = new GameVector(0, 0);
 		}
 
-		public MovingEntity(Coordinate roomPosition, BoundingCircle[] boundingCircles, Dictionary<string, Sprite> sprites,
+		public MovingEntity(Coordinate roomPosition, Dictionary<string, ISprite> sprites, string startingSprite, BoundingCircle[] boundingCircles,
 			int topSpeed, double friction, bool isGravityOn)
-			: base(roomPosition, true, boundingCircles, sprites)
+			: base(roomPosition, sprites, startingSprite, true, boundingCircles)
 		{
-			_topSpeed = topSpeed;
+			TopSpeed = topSpeed;
 			_friction = friction;
 			_isGravityOn = isGravityOn;
 
-			_velocity = new GameVector(0, 0);
+			Velocity = new GameVector(0, 0);
 		}
 
-		protected override void move(Coordinate newPosition)
-		{ base.move(new Coordinate(RoomPosition.getX() + newPosition.getX(), RoomPosition.getY() + newPosition.getY())); }
+		protected override sealed void Move(Coordinate newPosition)
+		{ base.Move(new Coordinate(RoomPosition.X + newPosition.X, RoomPosition.Y + newPosition.Y)); }
 
 		protected void checkVelocity()
 		{
 			if (!_isGravityOn)
 			{
-				if (_velocity.Magnitude > _topSpeed)
-				{ _velocity = new GameVector(_topSpeed, _velocity.Direction); }
+				if (Velocity.Magnitude > TopSpeed)
+				{ Velocity = new GameVector(TopSpeed, Velocity.Direction); }
 			}
 			else
 			{
-				if (Math.Abs(_velocity.getXLength()) > _topSpeed)
+				if (Math.Abs(Velocity.getXLength()) > TopSpeed)
 				{
-					_velocity = GameVector.makeFromCoordinate(new Coordinate(_topSpeed * Math.Abs(_velocity.getXLength()) / _velocity.getXLength(),
-					  _velocity.getYLength()));
+					Velocity = GameVector.makeFromCoordinate(new Coordinate(TopSpeed * Math.Abs(Velocity.getXLength()) / Velocity.getXLength(),
+					  Velocity.getYLength()));
 				}
 				//if (_velocity.getYLength() < -_topSpeed)
 				//{
@@ -114,13 +103,13 @@ namespace CirclePhysics.Entity
 				checkVelocity();
 
 				if (_isGravityOn)
-				{ _velocity = _velocity + new GameVector(1, Math.PI / 2); }
+				{ Velocity = Velocity + new GameVector(1, Math.PI / 2); }
 
-				if (_isOnGround && _velocity.Magnitude < 1.5)
-				{ _velocity = new GameVector(0, _velocity.Direction); }
+				if (IsOnGround && Velocity.Magnitude < 1.5)
+				{ Velocity = new GameVector(0, Velocity.Direction); }
 
-				double addX = _velocity.getXLength() * gameTime.ElapsedGameTime.Milliseconds * 0.0001;
-				double addY = _velocity.getYLength() * gameTime.ElapsedGameTime.Milliseconds * 0.0001;
+				double addX = Velocity.getXLength() * gameTime.ElapsedGameTime.Milliseconds * 0.0001;
+				double addY = Velocity.getYLength() * gameTime.ElapsedGameTime.Milliseconds * 0.0001;
 
 				Coordinate add = new Coordinate(addX, addY);
 
@@ -173,7 +162,7 @@ namespace CirclePhysics.Entity
 					}
 				}
 
-				_isOnGround = onGround; //TODO onGround should always be true if gravityOn is false
+				IsOnGround = onGround; //TODO onGround should always be true if gravityOn is false
 
 				addX = add.getX() - addX;
 				addY = add.getY() - addY;
@@ -184,10 +173,10 @@ namespace CirclePhysics.Entity
 				{ addY = 0; }
 				addX /= gameTime.ElapsedGameTime.Milliseconds * 0.0001;
 				addY /= gameTime.ElapsedGameTime.Milliseconds * 0.0001;
-				_velocity = GameVector.makeFromCoordinate(new Coordinate(addX, addY));
+				Velocity = GameVector.makeFromCoordinate(new Coordinate(addX, addY));
 
-				if (_friction != -1 && _isOnGround && _velocity.Magnitude > _friction)
-				{ _velocity = new GameVector(_velocity.Magnitude - _friction, _velocity.Direction); }
+				if (_friction != -1 && IsOnGround && Velocity.Magnitude > _friction)
+				{ Velocity = new GameVector(Velocity.Magnitude - _friction, Velocity.Direction); }
 			}
 		}
 	}
