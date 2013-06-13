@@ -14,13 +14,18 @@ namespace CirclePhysics.Physics
 		public double Direction { get; private set; }
 
 		public double X { get { return Magnitude * Math.Cos(Direction);} }
-		public double Y { get { return Magnitude*Math.Sin(Direction); } }
+		public double Y { get { return Magnitude * Math.Sin(Direction); } }
 
-		public Coordinate Coordinate { get { return new Coordinate(X, Y); } }
+		public Coordinate ToCoordinate { get { return new Coordinate(X, Y); } }
 
 		public static GameVector operator +(GameVector v1, GameVector v2)
 		{
-			return new GameVector(v1.);
+			double x = v1.X + v2.X;
+			double y = v1.Y + v2.Y;
+			double magnitude = Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2));
+			double direction = Math.Atan2(y, y);
+
+			return new GameVector(magnitude, direction);
 		}
 	}
 }

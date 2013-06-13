@@ -2,6 +2,7 @@
 using CirclePhysics.Physics;
 using System;
 using System.Collections.Generic;
+using CirclePhysics.Utility;
 
 namespace CirclePhysics.Entity
 {
@@ -14,11 +15,9 @@ namespace CirclePhysics.Entity
 		protected void AddVelocity(GameVector velocity)
 		{ Velocity += velocity; }
 
-		private double _friction;
-		public double Friction { get { return _friction; } }
+		public double Friction { get; private set; }
 
-		private bool _isGravityOn;
-		public bool IsGravityOn { get { return _isGravityOn; } }
+		public bool IsGravityOn { get; private set; }
 
 		public MovingEntity(Coordinate roomPosition, Dictionary<string, ISprite> sprites, string startingSprite, int topSpeed)
 			: base(roomPosition, sprites, startingSprite)
@@ -26,8 +25,8 @@ namespace CirclePhysics.Entity
 			TopSpeed = topSpeed;
 
 			Velocity = new GameVector(0, 0);
-			_friction = -1;
-			_isGravityOn = false;
+			Friction = -1;
+			IsGravityOn = false;
 		}
 
 		public MovingEntity(Coordinate roomPosition, Dictionary<string, ISprite> sprites, string startingSprite, bool solid, int radius, int topSpeed)
@@ -36,8 +35,8 @@ namespace CirclePhysics.Entity
 			TopSpeed = topSpeed;
 
 			Velocity = new GameVector(0, 0);
-			_friction = -1;
-			_isGravityOn = false;
+			Friction = -1;
+			IsGravityOn = false;
 		}
 
 		public MovingEntity(Coordinate roomPosition, Dictionary<string, ISprite> sprites, string startingSprite, bool solid, BoundingCircle[] boundingCircles, int topSpeed)
@@ -46,8 +45,8 @@ namespace CirclePhysics.Entity
 			TopSpeed = topSpeed;
 
 			Velocity = new GameVector(0, 0);
-			_friction = -1;
-			_isGravityOn = false;
+			Friction = -1;
+			IsGravityOn = false;
 		}
 
 		public MovingEntity(Coordinate roomPosition, Dictionary<string, ISprite> sprites, string startingSprite, int radius,
@@ -55,8 +54,8 @@ namespace CirclePhysics.Entity
 			: base(roomPosition, sprites, startingSprite, true, radius)
 		{
 			TopSpeed = topSpeed;
-			_friction = friction;
-			_isGravityOn = isGravityOn;
+			Friction = friction;
+			IsGravityOn = isGravityOn;
 
 			Velocity = new GameVector(0, 0);
 		}
@@ -66,8 +65,8 @@ namespace CirclePhysics.Entity
 			: base(roomPosition, sprites, startingSprite, true, boundingCircles)
 		{
 			TopSpeed = topSpeed;
-			_friction = friction;
-			_isGravityOn = isGravityOn;
+			Friction = friction;
+			IsGravityOn = isGravityOn;
 
 			Velocity = new GameVector(0, 0);
 		}
@@ -75,20 +74,17 @@ namespace CirclePhysics.Entity
 		protected override sealed void Move(Coordinate newPosition)
 		{ base.Move(new Coordinate(RoomPosition.X + newPosition.X, RoomPosition.Y + newPosition.Y)); }
 
-		protected void checkVelocity()
+		protected void CheckVelocity()
 		{
-			if (!_isGravityOn)
+			if (!IsGravityOn)
 			{
 				if (Velocity.Magnitude > TopSpeed)
 				{ Velocity = new GameVector(TopSpeed, Velocity.Direction); }
 			}
 			else
 			{
-				if (Math.Abs(Velocity.getXLength()) > TopSpeed)
-				{
-					Velocity = GameVector.makeFromCoordinate(new Coordinate(TopSpeed * Math.Abs(Velocity.getXLength()) / Velocity.getXLength(),
-					  Velocity.getYLength()));
-				}
+				if (Math.Abs(Velocity.X) > TopSpeed)
+				{ Velocity = new Coordinate(TopSpeed * Velocity.X.GetSign(), Velocity.Y).ToGameVector(); }
 				//if (_velocity.getYLength() < -_topSpeed)
 				//{
 				//    _velocity = GameVector.makeFromCoordinate(new Coordinate(_velocity.getXLength(), -_topSpeed));
@@ -96,45 +92,45 @@ namespace CirclePhysics.Entity
 			}
 		}
 
-		public override void update(GameTime gameTime, List<StaticEntity> entityList, List<Surface> surfaces)
+		public override void Update(int gameTime, List<StaticEntity> entityList, List<Surface> surfaces)
 		{
-			if (gameTime.ElapsedGameTime.Milliseconds != 0)
+			if (gameTime != 0)
 			{
-				checkVelocity();
+				CheckVelocity();
 
-				if (_isGravityOn)
+				if (IsGravityOn)
 				{ Velocity = Velocity + new GameVector(1, Math.PI / 2); }
 
 				if (IsOnGround && Velocity.Magnitude < 1.5)
 				{ Velocity = new GameVector(0, Velocity.Direction); }
 
-				double addX = Velocity.getXLength() * gameTime.ElapsedGameTime.Milliseconds * 0.0001;
-				double addY = Velocity.getYLength() * gameTime.ElapsedGameTime.Milliseconds * 0.0001;
+				double addX = Velocity.Y * gameTime * 0.0001;
+				double addY = Velocity.Y * gameTime * 0.0001;
 
 				Coordinate add = new Coordinate(addX, addY);
 
-				move(new Coordinate(addX, addY));
+				Move(new Coordinate(addX, addY));
 				addX = addY = 0;
 
 				bool onGround = false;
 
-				if (IsSolid && gameTime.ElapsedGameTime.Milliseconds != 0)// && _velocity.getMagnitude() != 0
+				if (IsSolid && gameTime != 0)// && _velocity.getMagnitude() != 0
 				{
 					for (int i = 0; i < entityList.Count; ++i)
 					{
 						if (this != entityList[i] && entityList[i].IsSolid)
 						{
-							Coordinate moveTo = Collision.findColliding(this, entityList[i]);
+							Coordinate moveTo = Collision.FindColliding(this, entityList[i]);
 							if (moveTo != null)
 							{
-								addX = moveTo.getX();
-								addY = moveTo.getY();
+								addX = moveTo.X;
+								addY = moveTo.Y;
 
-								if (Math.Abs(addX - add.getX()) < 0.0001)
-								{ addX = add.getX(); }
-								if (Math.Abs(addY - add.getY()) < 0.0001)
-								{ addY = add.getY(); }
-								move(new Coordinate(0, 0) - moveTo);
+								if (Math.Abs(addX - add.X) < 0.0001)
+								{ addX = add.X; }
+								if (Math.Abs(addY - add.Y) < 0.0001)
+								{ addY = add.Y; }
+								Move(new Coordinate(0, 0) - moveTo);
 
 								if (addY > 0.0001)
 								{ onGround = true; }
@@ -144,17 +140,17 @@ namespace CirclePhysics.Entity
 
 					for (int i = 0; i < surfaces.Count; ++i)
 					{
-						Coordinate moveTo = Collision.findColliding(this, surfaces[i]);
+						Coordinate moveTo = Collision.FindColliding(this, surfaces[i]);
 						if (moveTo != null)
 						{
-							addX = moveTo.getX();
-							addY = moveTo.getY();
+							addX = moveTo.X;
+							addY = moveTo.Y;
 
-							if (Math.Abs(addX - add.getX()) < 0.0001)
-							{ addX = add.getX(); }
-							if (Math.Abs(addY - add.getY()) < 0.0001)
-							{ addY = add.getY(); }
-							move(new Coordinate(0, 0) - moveTo);
+							if (Math.Abs(addX - add.X) < 0.0001)
+							{ addX = add.X; }
+							if (Math.Abs(addY - add.Y) < 0.0001)
+							{ addY = add.Y; }
+							Move(new Coordinate(0, 0) - moveTo);
 
 							if (addY > 0.0001)
 							{ onGround = true; }
@@ -164,19 +160,19 @@ namespace CirclePhysics.Entity
 
 				IsOnGround = onGround; //TODO onGround should always be true if gravityOn is false
 
-				addX = add.getX() - addX;
-				addY = add.getY() - addY;
+				addX = add.X - addX;
+				addY = add.Y - addY;
 
 				if (Math.Abs(addX) < 0.0001)
 				{ addX = 0; }
 				if (Math.Abs(addY) < 0.0001)
 				{ addY = 0; }
-				addX /= gameTime.ElapsedGameTime.Milliseconds * 0.0001;
-				addY /= gameTime.ElapsedGameTime.Milliseconds * 0.0001;
-				Velocity = GameVector.makeFromCoordinate(new Coordinate(addX, addY));
+				addX /= gameTime * 0.0001;
+				addY /= gameTime * 0.0001;
+				Velocity = new Coordinate(addX, addY).ToGameVector();
 
-				if (_friction != -1 && IsOnGround && Velocity.Magnitude > _friction)
-				{ Velocity = new GameVector(Velocity.Magnitude - _friction, Velocity.Direction); }
+				if (Friction != -1 && IsOnGround && Velocity.Magnitude > Friction)
+				{ Velocity = new GameVector(Velocity.Magnitude - Friction, Velocity.Direction); }
 			}
 		}
 	}

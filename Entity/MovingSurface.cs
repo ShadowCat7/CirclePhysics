@@ -1,29 +1,29 @@
-﻿using CirclePhysics.Graphics;
+﻿using CirclePhysics.Graphics.Interfaces;
 using CirclePhysics.Physics;
-using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using CirclePhysics.Utility;
 
 namespace CirclePhysics.Entity
 {
 	public class MovingSurface : Surface
 	{
-		private Coordinate _lowerPivot;
-		private Coordinate _higherPivot;
+		private readonly Coordinate _lowerPivot;
+		private readonly Coordinate _higherPivot;
 		private bool _movingToHigher;
-		private int _speed;
+		private readonly int _speed;
 
 		private GameVector _impartMovement;
 		public GameVector ImpartedMovement { get { return _impartMovement; } }
 
-		public MovingSurface(Coordinate roomPosition, Dictionary<string, Sprite> sprites, Coordinate startCoordinate, Coordinate endCoordinate,
+		public MovingSurface(Coordinate roomPosition, Dictionary<string, ISprite> sprites, string startingSprite, Coordinate startCoordinate, Coordinate endCoordinate,
 			Coordinate lowerPivot, Coordinate higherPivot, bool movingToHigher, int speed)
-			: base(roomPosition, sprites, startCoordinate, endCoordinate)
+			: base(roomPosition, sprites, startingSprite, startCoordinate, endCoordinate)
 		{
 			_movingToHigher = movingToHigher;
 			_speed = speed;
 
-			GameVector lower = GameVector.makeFromCoordinate(lowerPivot);
-			GameVector higher = GameVector.makeFromCoordinate(higherPivot);
+			GameVector lower = lowerPivot.ToGameVector();
+			GameVector higher = higherPivot.ToGameVector();
 			if (higher.Direction < lower.Direction)
 			{
 				_lowerPivot = higherPivot;
@@ -37,12 +37,12 @@ namespace CirclePhysics.Entity
 			}
 		}
 
-		public override void update(GameTime gameTime)
+		public override void Update(int gameTime)
 		{
 			//use GameVectors to find the relative position.
-			GameVector lower = GameVector.makeFromCoordinate(_lowerPivot);
-			GameVector higher = GameVector.makeFromCoordinate(_higherPivot);
-			GameVector position = GameVector.makeFromCoordinate(RoomPosition);
+			GameVector lower = _lowerPivot.ToGameVector();
+			GameVector higher = _higherPivot.ToGameVector();
+			GameVector position = RoomPosition.ToGameVector();
 
 			if (position.Direction < lower.Direction)
 			{ _movingToHigher = true; }
@@ -50,22 +50,22 @@ namespace CirclePhysics.Entity
 			{ _movingToHigher = false; }
 			else // ==
 			{
-				if (RoomPosition.getX() <= _lowerPivot.getX())
+				if (RoomPosition.X <= _lowerPivot.X)
 				{ _movingToHigher = true; }
-				else if (RoomPosition.getX() >= _higherPivot.getX())
+				else if (RoomPosition.X >= _higherPivot.X)
 				{ _movingToHigher = false; }
 			}
 
 			GameVector difference;
 
 			if (_movingToHigher)
-			{ difference = GameVector.makeFromCoordinate(_higherPivot - _lowerPivot); }
+			{ difference = (_higherPivot - _lowerPivot).ToGameVector(); }
 			else
-			{ difference = GameVector.makeFromCoordinate(_lowerPivot - _higherPivot); }
+			{ difference = (_lowerPivot - _higherPivot).ToGameVector(); }
 
-			difference = new GameVector(difference.Magnitude * gameTime.ElapsedGameTime.Milliseconds * 0.0001 * _speed, difference.Direction);
+			difference = new GameVector(difference.Magnitude * gameTime * 0.0001 * _speed, difference.Direction);
 
-			move(Coordinate.makeFromVector(difference));
+			Move(difference.ToCoordinate());
 			_impartMovement = difference;
 		}
 	}
