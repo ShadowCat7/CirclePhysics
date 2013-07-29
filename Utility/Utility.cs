@@ -13,8 +13,5 @@ namespace CirclePhysics.Utility
 			return new GameVector(Math.Sqrt(Math.Pow(coordinate.X, 2) + Math.Pow(coordinate.Y, 2)),
 				Math.Atan2(coordinate.Y, coordinate.X));
 		}
-
-		public static int GetSign(this double num)
-		{ return (int)(num / Math.Abs(num)); }
 	}
 }

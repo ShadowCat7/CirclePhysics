@@ -3,6 +3,7 @@ using CirclePhysics.Graphics.Interfaces;
 using CirclePhysics.Physics;
 using System.Collections.Generic;
 using CirclePhysics.Physics.Interfaces;
+using CirclePhysics.Rooms;
 
 namespace CirclePhysics.Entity
 {
@@ -25,9 +26,9 @@ namespace CirclePhysics.Entity
 
 			if (CurrentSprite != null)
 			{
-				if (RoomPosition.X > positionOfScreen.X + Screen.X)
+				if (RoomPosition.X > positionOfScreen.X + Room.ViewPort.X)
 				{ OnScreen = false; }
-				else if (RoomPosition.Y > positionOfScreen.Y + Screen.Y)
+				else if (RoomPosition.Y > positionOfScreen.Y + Room.ViewPort.Y)
 				{ OnScreen = false; }
 				else if (RoomPosition.X + CurrentSprite.Image.Width < positionOfScreen.X)
 				{ OnScreen = false; }
@@ -38,9 +39,9 @@ namespace CirclePhysics.Entity
 			}
 			else
 			{
-				if (RoomPosition.X > positionOfScreen.X + Screen.X)
+				if (RoomPosition.X > positionOfScreen.X + Room.ViewPort.X)
 				{ OnScreen = false; }
-				else if (RoomPosition.Y > positionOfScreen.Y + Screen.Y)
+				else if (RoomPosition.Y > positionOfScreen.Y + Room.ViewPort.Y)
 				{ OnScreen = false; }
 				else if (RoomPosition.X < positionOfScreen.X)
 				{ OnScreen = false; }

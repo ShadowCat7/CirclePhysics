@@ -1,9 +1,9 @@
 ﻿using CirclePhysics.Graphics;
 using CirclePhysics.Physics;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using CirclePhysics.Graphics.Interfaces;
+using CirclePhysics.Controls;
 
 namespace CirclePhysics.Entity
 {
@@ -18,35 +18,35 @@ namespace CirclePhysics.Entity
 		private double _timer;
 		private double _shootTimer;
 
-		private Gun _gun;
-		private List<Bullet> _bullets;
+		//private Gun _gun;
+		//private List<Bullet> _bullets;
 
-		public Player(Coordinate roomPosition, BoundingCircle[] boundingCircles, Dictionary<string, Sprite> sprites, Gun gun)
-			: base(roomPosition, boundingCircles, sprites, _TOP_SPEED, _FRICTION, true)
+		public Player(Coordinate roomPosition, BoundingCircle[] boundingCircles, Dictionary<string, ISprite> sprites, string startingSprite)//, Gun gun)
+			: base(roomPosition, sprites, startingSprite, true, boundingCircles, _TOP_SPEED, _FRICTION, true)
 		{
 			horizontalFacingRight = true;
 			verticalFacing = 0;
-			_gun = gun;
+			//_gun = gun;
 
 			_timer = -1;
 			_shootTimer = 0;
-			_bullets = new List<Bullet>();
+			//_bullets = new List<Bullet>();
 		}
 
 		public override sealed void SetScreenPosition(Coordinate screenPosition)
-		{ setPlayerScreenPosition(screenPosition); }
+		{ SetPlayerScreenPosition(screenPosition); }
 
-		public void update(GameTime gameTime, KeyboardState newKeyboardState, KeyboardState oldKeyboardState,
-			MouseState newMouseState, MouseState oldMouseState, List<StaticEntity> entityList, List<Surface> surfaces)
+		public void update(int elapsedTime, CircleControls oldControls, CircleControls newControls, List<StaticEntity> entityList,
+			List<Surface> surfaces)
 		{
-			GetCurrentSprite().Update();
+			CurrentSprite.Update();
 
-			if (newKeyboardState.IsKeyDown(Keys.W))
+			if (newControls.HasFlag(CircleControls.Up))
 			{ AddVelocity(new GameVector(TopSpeed / 80, -Math.PI / 2)); }
-			if (newKeyboardState.IsKeyDown(Keys.S))
+			if (newControls.HasFlag(CircleControls.Down))
 			{ AddVelocity(new GameVector(TopSpeed, Math.PI / 2)); }
 
-			if (newKeyboardState.IsKeyDown(Keys.A))
+			if (newControls.HasFlag(CircleControls.Left))
 			{
 				if (IsOnGround)
 				{ AddVelocity(new GameVector(TopSpeed / 80, Math.PI)); }
@@ -54,7 +54,7 @@ namespace CirclePhysics.Entity
 				{ AddVelocity(new GameVector(TopSpeed / 120, Math.PI)); }
 			}
 
-			if (newKeyboardState.IsKeyDown(Keys.D))
+			if (newControls.HasFlag(CircleControls.Right))
 			{
 				if (IsOnGround)
 				{ AddVelocity(new GameVector(TopSpeed / 80, 0)); }
@@ -62,47 +62,46 @@ namespace CirclePhysics.Entity
 				{ AddVelocity(new GameVector(TopSpeed / 120, 0)); }
 			}
 
-			if (IsOnGround && newKeyboardState.IsKeyDown(Keys.Space) && !oldKeyboardState.IsKeyDown(Keys.Space))
+			if (IsOnGround && newControls.HasFlag(CircleControls.Jump) && !oldControls.HasFlag(CircleControls.Jump))
 			{
 				AddVelocity(new GameVector(275, -Math.PI / 2));
 				IsOnGround = false;
 				_timer = 0;
 			}
 
-			if (newKeyboardState.IsKeyDown(Keys.Space) && oldKeyboardState.IsKeyDown(Keys.Space) && _timer >= 0)
+			if (newControls.HasFlag(CircleControls.Jump) && oldControls.HasFlag(CircleControls.Jump) && _timer >= 0)
 			{
 				if (_timer > 4000)
 				{ _timer = -1; }
 				else
 				{
-					AddVelocity(new GameVector(Velocity.getYLength() + 275, -Math.PI / 2));
-					_timer += gameTime.ElapsedGameTime.Milliseconds;
+					AddVelocity(new GameVector(Velocity.Y + 275, -Math.PI / 2));
+					_timer += elapsedTime;
 				}
 			}
 
-			if (!newKeyboardState.IsKeyDown(Keys.Space) &&
-			oldKeyboardState.IsKeyDown(Keys.Space))
+			if (!newControls.HasFlag(CircleControls.Jump) && oldControls.HasFlag(CircleControls.Jump))
 			{
 				if (_timer != -1)
 				{
-					AddVelocity(new GameVector(Velocity.getYLength() + 275, -Math.PI / 2));
+					AddVelocity(new GameVector(Velocity.Y + 275, -Math.PI / 2));
 					_timer = -1;
 				}
 			}
 
-			if (newMouseState.LeftButton == ButtonState.Pressed)
-			{
-				if (_shootTimer == _gun.getRateOfFire())
-				{ _bullets.Add(_gun.createBullet(RoomPosition, 0)); }
-			}
+			//if (newControls.HasFlag(CircleControls.Action))
+			//{
+			//    if (_shootTimer == _gun.getRateOfFire())
+			//    { _bullets.Add(_gun.createBullet(RoomPosition, 0)); }
+			//}
 
-			if (_shootTimer < _gun.getRateOfFire())
-			{ ++_shootTimer; }
+			//if (_shootTimer < _gun.getRateOfFire())
+			//{ ++_shootTimer; }
 
-			for (int i = 0; i < _bullets.Count; ++i)
-			{ _bullets[i].update(gameTime, entityList, surfaces, _bullets); }
+			//for (int i = 0; i < _bullets.Count; ++i)
+			//{ _bullets[i].update(elapsedTime, entityList, surfaces, _bullets); }
 
-			base.update(gameTime, entityList, surfaces);
+			base.Update(elapsedTime, entityList, surfaces);
 		}
 	}
 }

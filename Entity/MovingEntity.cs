@@ -19,39 +19,9 @@ namespace CirclePhysics.Entity
 
 		public bool IsGravityOn { get; private set; }
 
-		public MovingEntity(Coordinate roomPosition, Dictionary<string, ISprite> sprites, string startingSprite, int topSpeed)
-			: base(roomPosition, sprites, startingSprite)
-		{
-			TopSpeed = topSpeed;
-
-			Velocity = new GameVector(0, 0);
-			Friction = -1;
-			IsGravityOn = false;
-		}
-
-		public MovingEntity(Coordinate roomPosition, Dictionary<string, ISprite> sprites, string startingSprite, bool solid, int radius, int topSpeed)
-			: base(roomPosition, sprites, startingSprite, solid, radius)
-		{
-			TopSpeed = topSpeed;
-
-			Velocity = new GameVector(0, 0);
-			Friction = -1;
-			IsGravityOn = false;
-		}
-
-		public MovingEntity(Coordinate roomPosition, Dictionary<string, ISprite> sprites, string startingSprite, bool solid, BoundingCircle[] boundingCircles, int topSpeed)
-			: base(roomPosition, sprites, startingSprite, solid, boundingCircles)
-		{
-			TopSpeed = topSpeed;
-
-			Velocity = new GameVector(0, 0);
-			Friction = -1;
-			IsGravityOn = false;
-		}
-
-		public MovingEntity(Coordinate roomPosition, Dictionary<string, ISprite> sprites, string startingSprite, int radius,
-			int topSpeed, double friction, bool isGravityOn)
-			: base(roomPosition, sprites, startingSprite, true, radius)
+		public MovingEntity(Coordinate roomPosition, Dictionary<string, ISprite> sprites, string startingSprite, bool isSolid, int radius,
+			int topSpeed, double friction = -1, bool isGravityOn = false)
+			: base(roomPosition, sprites, startingSprite, isSolid, radius)
 		{
 			TopSpeed = topSpeed;
 			Friction = friction;
@@ -60,9 +30,9 @@ namespace CirclePhysics.Entity
 			Velocity = new GameVector(0, 0);
 		}
 
-		public MovingEntity(Coordinate roomPosition, Dictionary<string, ISprite> sprites, string startingSprite, BoundingCircle[] boundingCircles,
-			int topSpeed, double friction, bool isGravityOn)
-			: base(roomPosition, sprites, startingSprite, true, boundingCircles)
+		public MovingEntity(Coordinate roomPosition, Dictionary<string, ISprite> sprites, string startingSprite, bool isSolid,
+			BoundingCircle[] boundingCircles, int topSpeed, double friction = -1, bool isGravityOn = false)
+			: base(roomPosition, sprites, startingSprite, isSolid, boundingCircles)
 		{
 			TopSpeed = topSpeed;
 			Friction = friction;
@@ -84,7 +54,7 @@ namespace CirclePhysics.Entity
 			else
 			{
 				if (Math.Abs(Velocity.X) > TopSpeed)
-				{ Velocity = new Coordinate(TopSpeed * Velocity.X.GetSign(), Velocity.Y).ToGameVector(); }
+				{ Velocity = new Coordinate(TopSpeed * Math.Sign(Velocity.X), Velocity.Y).ToGameVector(); }
 				//if (_velocity.getYLength() < -_topSpeed)
 				//{
 				//    _velocity = GameVector.makeFromCoordinate(new Coordinate(_velocity.getXLength(), -_topSpeed));
@@ -118,7 +88,7 @@ namespace CirclePhysics.Entity
 				{
 					for (int i = 0; i < entityList.Count; ++i)
 					{
-						if (this != entityList[i] && entityList[i].IsSolid)
+						if (!object.ReferenceEquals(this, entityList[i]) && entityList[i].IsSolid)
 						{
 							Coordinate moveTo = Collision.FindColliding(this, entityList[i]);
 							if (moveTo != null)

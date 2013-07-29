@@ -11,5 +11,7 @@ namespace CirclePhysics.Graphics.Implementations
 
 		public void Draw(IDrawer drawer)
 		{ drawer.Draw(Image); }
+
+		public void Update() { }
 	}
 }
