@@ -1,5 +1,6 @@
 ﻿using CirclePhysics.Graphics.Interfaces;
 using CirclePhysics.Physics;
+using CirclePhysics.Physics.Interfaces;
 using System;
 using System.Collections.Generic;
 using CirclePhysics.Utility;
@@ -74,33 +75,27 @@ namespace CirclePhysics.Entity
 				if (IsOnGround && Velocity.Magnitude < 1.5)
 				{ Velocity = new GameVector(0, Velocity.Direction); }
 
-				double addX = Velocity.Y * gameTime * 0.0001;
+				double addX = Velocity.X * gameTime * 0.0001;
 				double addY = Velocity.Y * gameTime * 0.0001;
 
 				Coordinate add = new Coordinate(addX, addY);
 
-				Move(new Coordinate(addX, addY));
+				Move(add);
 				addX = addY = 0;
 
 				bool onGround = false;
 
-				if (IsSolid && gameTime != 0)// && _velocity.getMagnitude() != 0
+				if (IsSolid)// && _velocity.getMagnitude() != 0
 				{
 					for (int i = 0; i < entityList.Count; ++i)
 					{
 						if (!object.ReferenceEquals(this, entityList[i]) && entityList[i].IsSolid)
 						{
-							Coordinate moveTo = Collision.FindColliding(this, entityList[i]);
-							if (moveTo != null)
+							Coordinate resultCoordinate = CheckCollision(entityList[i], add);
+							if (add != null)
 							{
-								addX = moveTo.X;
-								addY = moveTo.Y;
-
-								if (Math.Abs(addX - add.X) < 0.0001)
-								{ addX = add.X; }
-								if (Math.Abs(addY - add.Y) < 0.0001)
-								{ addY = add.Y; }
-								Move(new Coordinate(0, 0) - moveTo);
+								addX = resultCoordinate.X;
+								addY = resultCoordinate.Y;
 
 								if (addY > 0.0001)
 								{ onGround = true; }
@@ -110,17 +105,11 @@ namespace CirclePhysics.Entity
 
 					for (int i = 0; i < surfaces.Count; ++i)
 					{
-						Coordinate moveTo = Collision.FindColliding(this, surfaces[i]);
-						if (moveTo != null)
+						Coordinate resultCoordinate = CheckCollision(surfaces[i], add);
+						if (add != null)
 						{
-							addX = moveTo.X;
-							addY = moveTo.Y;
-
-							if (Math.Abs(addX - add.X) < 0.0001)
-							{ addX = add.X; }
-							if (Math.Abs(addY - add.Y) < 0.0001)
-							{ addY = add.Y; }
-							Move(new Coordinate(0, 0) - moveTo);
+							addX = resultCoordinate.X;
+							addY = resultCoordinate.Y;
 
 							if (addY > 0.0001)
 							{ onGround = true; }
@@ -144,6 +133,28 @@ namespace CirclePhysics.Entity
 				if (Friction != -1 && IsOnGround && Velocity.Magnitude > Friction)
 				{ Velocity = new GameVector(Velocity.Magnitude - Friction, Velocity.Direction); }
 			}
+		}
+
+		private Coordinate CheckCollision(ICollidable collideWith, Coordinate add)
+		{
+			double x, y;
+
+			Coordinate moveTo = Collision.FindColliding(this, collideWith);
+			if (moveTo != null)
+			{
+				x = moveTo.X;
+				y = moveTo.Y;
+
+				if (Math.Abs(x - add.X) < 0.0001)
+				{ x = add.X; }
+				if (Math.Abs(y - add.Y) < 0.0001)
+				{ y = add.Y; }
+				Move(new Coordinate(0, 0) - moveTo);
+
+				return new Coordinate(x, y);
+			}
+			else
+			{ return null; }
 		}
 	}
 }

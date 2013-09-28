@@ -18,19 +18,14 @@ namespace CirclePhysics.Entity
 		private double _timer;
 		private double _shootTimer;
 
-		//private Gun _gun;
-		//private List<Bullet> _bullets;
-
-		public Player(Coordinate roomPosition, BoundingCircle[] boundingCircles, Dictionary<string, ISprite> sprites, string startingSprite)//, Gun gun)
+		public Player(Coordinate roomPosition, BoundingCircle[] boundingCircles, Dictionary<string, ISprite> sprites, string startingSprite)
 			: base(roomPosition, sprites, startingSprite, true, boundingCircles, _TOP_SPEED, _FRICTION, true)
 		{
 			horizontalFacingRight = true;
 			verticalFacing = 0;
-			//_gun = gun;
 
 			_timer = -1;
 			_shootTimer = 0;
-			//_bullets = new List<Bullet>();
 		}
 
 		public override sealed void SetScreenPosition(Coordinate screenPosition)
@@ -88,18 +83,6 @@ namespace CirclePhysics.Entity
 					_timer = -1;
 				}
 			}
-
-			//if (newControls.HasFlag(CircleControls.Action))
-			//{
-			//    if (_shootTimer == _gun.getRateOfFire())
-			//    { _bullets.Add(_gun.createBullet(RoomPosition, 0)); }
-			//}
-
-			//if (_shootTimer < _gun.getRateOfFire())
-			//{ ++_shootTimer; }
-
-			//for (int i = 0; i < _bullets.Count; ++i)
-			//{ _bullets[i].update(elapsedTime, entityList, surfaces, _bullets); }
 
 			base.Update(elapsedTime, entityList, surfaces);
 		}

@@ -2,7 +2,6 @@
 {
 	public interface IImage
 	{
-		void Draw();
 		int Width { get; }
 		int Height { get; }
 	}

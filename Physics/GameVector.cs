@@ -21,7 +21,7 @@ namespace CirclePhysics.Physics
 			double x = v1.X + v2.X;
 			double y = v1.Y + v2.Y;
 			double magnitude = Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2));
-			double direction = Math.Atan2(y, y);
+			double direction = Math.Atan2(y, x);
 
 			return new GameVector(magnitude, direction);
 		}

@@ -11,7 +11,7 @@ namespace CirclePhysics.Rooms
 
 		public ISprite Background { get; private set; }
 
-		public static Coordinate ViewPort { get; private set; }
+		public static Coordinate ViewPort { get; set; }
 
 		public Room(Coordinate size, ISprite background)
 		{

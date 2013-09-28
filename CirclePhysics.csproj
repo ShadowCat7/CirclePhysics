@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,6 +47,8 @@
     <Compile Include="Controls\ControlEnums.cs" />
     <Compile Include="Entity\CollisionObject.cs" />
     <Compile Include="Entity\IOverlay.cs" />
+    <Compile Include="FileManagement\FileManager.cs" />
+    <Compile Include="FileManagement\JsonConverter.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Graphics\Interfaces\IDrawer.cs" />
     <Compile Include="Graphics\Interfaces\ISprite.cs" />

@@ -9,9 +9,6 @@ namespace CirclePhysics.Graphics.Implementations
 
 		public IImage Image { get; private set; }
 
-		public void Draw(IDrawer drawer)
-		{ drawer.Draw(Image); }
-
 		public void Update() { }
 	}
 }

@@ -10,12 +10,16 @@ namespace CirclePhysics.Entity
 		{
 			ScreenPosition = screenPosition;
 			Sprites = sprites;
-			CurrentSprite = Sprites[startingSprite];
+
+			if (Sprites != null)
+				CurrentSprite = Sprites[startingSprite];
 		}
 
-		// Fields
 		public Coordinate ScreenPosition { get; private set; }
-		public virtual void SetScreenPosition(Coordinate positionOfScreen) { }
+		public virtual void SetScreenPosition(Coordinate positionOfScreen)
+		{
+			ScreenPosition = positionOfScreen;
+		}
 
 		public Dictionary<string, ISprite> Sprites { get; private set; }
 		public ISprite GetSpriteFromDict(string spriteTag)
@@ -30,10 +34,9 @@ namespace CirclePhysics.Entity
 		public void SetCurrentSprite(string key)
 		{ CurrentSprite = Sprites[key]; }
 
-		// Methods
 		public virtual void Draw(IDrawer drawer)
-		{ CurrentSprite.Draw(drawer); }
+		{ drawer.Draw(CurrentSprite, ScreenPosition); }
 
-		public virtual void Update() {}
+		public virtual void Update() { }
 	}
 }

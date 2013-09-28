@@ -11,10 +11,9 @@ namespace CirclePhysics.Physics
 
 		public static Coordinate FindColliding(IEntity tester, ICollidable testedAgainst)
 		{
-			Type type = testedAgainst.GetType();
-			if (type == typeof(IEntity))
+			if (testedAgainst is IEntity)
 			{ return FindCollision(tester, testedAgainst as IEntity); }
-			else if (type == typeof(ISurface))
+			else if (testedAgainst is ISurface)
 			{ return FindCollision(tester, testedAgainst as ISurface); }
 
 			return null;

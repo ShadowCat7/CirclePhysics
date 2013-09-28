@@ -1,7 +1,8 @@
-﻿namespace CirclePhysics.Graphics.Interfaces
+﻿using CirclePhysics.Physics;
+namespace CirclePhysics.Graphics.Interfaces
 {
 	public interface IDrawer
 	{
-		void Draw(IImage image);
+		void Draw(ISprite sprite, Coordinate screenPosition);
 	}
 }
