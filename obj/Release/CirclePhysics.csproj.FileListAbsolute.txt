@@ -1,5 +1,0 @@
-C:\Users\Attridge\programs\CirclePhysics\bin\Release\CirclePhysics.dll
-C:\Users\Attridge\programs\CirclePhysics\bin\Release\CirclePhysics.pdb
-C:\Users\Attridge\programs\CirclePhysics\obj\Release\ResolveAssemblyReference.cache
-C:\Users\Attridge\programs\CirclePhysics\obj\Release\CirclePhysics.dll
-C:\Users\Attridge\programs\CirclePhysics\obj\Release\CirclePhysics.pdb
