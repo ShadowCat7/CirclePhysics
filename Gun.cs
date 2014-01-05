@@ -6,7 +6,7 @@
 
 //namespace CirclePhysics
 //{
-//    public class Gun : Overlay
+//    public class Gun : ScreenOverlay
 //    {
 //        private Bullet _bullet;
 //        public int getRateOfFire()

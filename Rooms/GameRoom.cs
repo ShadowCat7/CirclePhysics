@@ -32,7 +32,7 @@ namespace CirclePhysics.Rooms
 
 		public override void Update(int elapsedTime, CircleControls oldControls, CircleControls newControls)
 		{
-			if (newControls.HasFlag(CircleControls.Pause))
+			if (newControls.HasFlag(CircleControls.Pause) && !oldControls.HasFlag(CircleControls.Pause))
 			{ _paused = !_paused; }
 
 			if (!_paused)
@@ -41,14 +41,23 @@ namespace CirclePhysics.Rooms
 				{
 					for (int i = 0; i < _entityList.Count; i++)
 					{
-						_entityList[i].Update(elapsedTime);
-						_entityList[i].Update(elapsedTime, _entityList, _surfaces);
+						if (!_entityList[i].IsDeleted)
+						{
+							_entityList[i].Update(elapsedTime);
+							_entityList[i].Update(elapsedTime, _entityList, _surfaces);
+						}
+
+						if (_entityList[i].IsDeleted)
+						{
+							_entityList.RemoveAt(i);
+							i--;
+						}
 					}
 
-					_player.update(elapsedTime, oldControls, newControls, _entityList, _surfaces);
+					_player.Update(elapsedTime, oldControls, newControls, _entityList, _surfaces);
 				}
 
-				_player.SetScreenPosition(getScreenPositionFromEntity(_player));
+				_player.SetScreenPosition(GetScreenPositionFromEntity(_player));
 
 				for (int i = 0; i < _entityList.Count; ++i)
 				{ _entityList[i].SetScreenPosition(_onScreen); }
@@ -71,43 +80,46 @@ namespace CirclePhysics.Rooms
 			_player.Draw(drawer);
 		}
 
-		public Coordinate getScreenPositionFromEntity(StaticEntity entity)
+		public Coordinate GetScreenPositionFromEntity(StaticEntity entity)
 		{
 			double x = 0;
 			double y = 0;
 			double ex = 0;
 			double ey = 0;
 
-			if (entity.RoomPosition.X + entity.BigBoundingCircle.Radius / 2 < ViewPort.X / 2)
+			double sizeX = ViewPort.X < Size.X ? Size.X : ViewPort.X;
+			double sizeY = ViewPort.Y < Size.Y ? Size.Y : ViewPort.Y;
+
+			if (entity.RoomPosition.X + entity.BigBoundingCircle.Radius < ViewPort.X / 2)
 			{
 				x = 0;
 				ex = entity.RoomPosition.X;
 			}
-			else if (entity.RoomPosition.X + entity.BigBoundingCircle.Radius / 2 > Size.X - ViewPort.X / 2)
+			else if (entity.RoomPosition.X + entity.BigBoundingCircle.Radius > sizeX - ViewPort.X / 2)
 			{
-				x = Size.X - ViewPort.X;
-				ex = entity.RoomPosition.X - (Size.X - ViewPort.X);
+				x = sizeX - ViewPort.X;
+				ex = entity.RoomPosition.X - (sizeX - ViewPort.X);
 			}
 			else
 			{
-				x = entity.RoomPosition.X + entity.BigBoundingCircle.Radius / 2 - ViewPort.X / 2;
-				ex = ViewPort.X / 2 - entity.BigBoundingCircle.Radius / 2;
+				x = entity.RoomPosition.X + entity.BigBoundingCircle.Radius - ViewPort.X / 2;
+				ex = ViewPort.X / 2 - entity.BigBoundingCircle.Radius;
 			}
 
-			if (entity.RoomPosition.Y + entity.BigBoundingCircle.Radius / 2 < ViewPort.Y / 2)
+			if (entity.RoomPosition.Y + entity.BigBoundingCircle.Radius < ViewPort.Y / 2)
 			{
 				y = 0;
 				ey = entity.RoomPosition.Y;
 			}
-			else if (entity.RoomPosition.Y + entity.BigBoundingCircle.Radius / 2 > Size.Y - ViewPort.Y / 2)
+			else if (entity.RoomPosition.Y + entity.BigBoundingCircle.Radius > sizeY - ViewPort.Y / 2)
 			{
-				y = Size.Y - ViewPort.Y;
-				ey = entity.RoomPosition.Y - Size.Y + ViewPort.Y;
+				y = sizeY - ViewPort.Y;
+				ey = entity.RoomPosition.Y - sizeY + ViewPort.Y;
 			}
 			else
 			{
-				y = entity.RoomPosition.Y + entity.BigBoundingCircle.Radius / 2 - ViewPort.Y / 2;
-				ey = ViewPort.Y / 2 - entity.BigBoundingCircle.Radius / 2;
+				y = entity.RoomPosition.Y + entity.BigBoundingCircle.Radius - ViewPort.Y / 2;
+				ey = ViewPort.Y / 2 - entity.BigBoundingCircle.Radius;
 			}
 
 			_onScreen = new Coordinate(x, y);

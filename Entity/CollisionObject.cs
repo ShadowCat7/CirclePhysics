@@ -1,13 +1,14 @@
-﻿using CirclePhysics.Graphics;
+﻿using System;
+using System.Collections.Generic;
+using CirclePhysics.Graphics;
 using CirclePhysics.Graphics.Interfaces;
 using CirclePhysics.Physics;
-using System.Collections.Generic;
 using CirclePhysics.Physics.Interfaces;
 using CirclePhysics.Rooms;
 
 namespace CirclePhysics.Entity
 {
-	public abstract class CollisionObject : Overlay, ICollidable
+	public abstract class CollisionObject : ScreenOverlay, ICollidable
 	{
 		protected CollisionObject(Coordinate roomPosition, Dictionary<string, ISprite> sprites, string startingSprite)
 			: base(null, sprites, startingSprite)
@@ -22,7 +23,7 @@ namespace CirclePhysics.Entity
 
 		public override void SetScreenPosition(Coordinate positionOfScreen)
 		{
-			base.SetScreenPosition(new Coordinate(RoomPosition.X- positionOfScreen.X, RoomPosition.Y - positionOfScreen.Y));
+			base.SetScreenPosition(new Coordinate(RoomPosition.X - positionOfScreen.X, RoomPosition.Y - positionOfScreen.Y));
 
 			if (CurrentSprite != null)
 			{
@@ -60,5 +61,7 @@ namespace CirclePhysics.Entity
 
 		public virtual void Update(int elapsedTime) { }
 		public virtual void Update(int elapsedTime, List<StaticEntity> entityList, List<Surface> surfaces) { }
+
+		public virtual void OnCollision(ICollidable collidable) { }
 	}
 }

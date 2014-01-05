@@ -3,6 +3,8 @@
 	public interface ISprite
 	{
 		IImage Image { get; }
+
+		DrawingOptions GetDrawingInfo();
 		void Update();
 	}
 }

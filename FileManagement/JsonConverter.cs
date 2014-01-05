@@ -1,19 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace CirclePhysics.FileManagement
 {
-	public class JsonConverter
+	public static class JsonConverter
 	{
-		public T Deserialize<T>(string json)
+		public static T Deserialize<T>(string json)
+			where T : class
 		{
-			return JsonConvert.DeserializeObject<T>(json);
+			try
+			{
+				return JsonConvert.DeserializeObject<T>(json);
+			}
+			catch
+			{
+				return null;
+			}
 		}
 
-		public string Serialize<T>(T thing)
+		public static string Serialize<T>(T thing)
 		{
 			return JsonConvert.SerializeObject(thing);
 		}

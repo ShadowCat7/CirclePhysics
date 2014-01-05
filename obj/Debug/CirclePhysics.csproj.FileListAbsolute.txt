@@ -3,3 +3,4 @@ C:\Users\Attridge\programs\CirclePhysics\bin\Debug\CirclePhysics.dll
 C:\Users\Attridge\programs\CirclePhysics\bin\Debug\CirclePhysics.pdb
 C:\Users\Attridge\programs\CirclePhysics\obj\Debug\CirclePhysics.dll
 C:\Users\Attridge\programs\CirclePhysics\obj\Debug\CirclePhysics.pdb
+C:\Users\Attridge\programs\CirclePhysics\bin\Debug\Newtonsoft.Json.dll

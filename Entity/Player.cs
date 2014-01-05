@@ -1,13 +1,14 @@
-﻿using CirclePhysics.Graphics;
-using CirclePhysics.Physics;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using CirclePhysics.Graphics.Interfaces;
 using CirclePhysics.Controls;
+using CirclePhysics.Graphics;
+using CirclePhysics.Graphics.Interfaces;
+using CirclePhysics.Physics;
+using CirclePhysics.Physics.Interfaces;
 
 namespace CirclePhysics.Entity
 {
-	public class Player : MovingEntity
+	public class Player : MovingEntity, IDamageable
 	{
 		private const int _TOP_SPEED = 200;
 		private const double _FRICTION = 1;
@@ -28,10 +29,12 @@ namespace CirclePhysics.Entity
 			_shootTimer = 0;
 		}
 
+		public Health Health { get; private set; }
+
 		public override sealed void SetScreenPosition(Coordinate screenPosition)
 		{ SetPlayerScreenPosition(screenPosition); }
 
-		public void update(int elapsedTime, CircleControls oldControls, CircleControls newControls, List<StaticEntity> entityList,
+		public virtual void Update(int elapsedTime, CircleControls oldControls, CircleControls newControls, List<StaticEntity> entityList,
 			List<Surface> surfaces)
 		{
 			CurrentSprite.Update();

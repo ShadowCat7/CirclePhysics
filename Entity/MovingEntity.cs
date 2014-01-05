@@ -75,13 +75,11 @@ namespace CirclePhysics.Entity
 				if (IsOnGround && Velocity.Magnitude < 1.5)
 				{ Velocity = new GameVector(0, Velocity.Direction); }
 
-				double addX = Velocity.X * gameTime * 0.0001;
-				double addY = Velocity.Y * gameTime * 0.0001;
-
-				Coordinate add = new Coordinate(addX, addY);
+				Coordinate add = new Coordinate(Velocity.X * gameTime * 0.0001, Velocity.Y * gameTime * 0.0001);
 
 				Move(add);
-				addX = addY = 0;
+				double addX = 0;
+				double addY = 0;
 
 				bool onGround = false;
 
@@ -92,7 +90,7 @@ namespace CirclePhysics.Entity
 						if (!object.ReferenceEquals(this, entityList[i]) && entityList[i].IsSolid)
 						{
 							Coordinate resultCoordinate = CheckCollision(entityList[i], add);
-							if (add != null)
+							if (resultCoordinate != null)
 							{
 								addX = resultCoordinate.X;
 								addY = resultCoordinate.Y;
@@ -106,7 +104,7 @@ namespace CirclePhysics.Entity
 					for (int i = 0; i < surfaces.Count; ++i)
 					{
 						Coordinate resultCoordinate = CheckCollision(surfaces[i], add);
-						if (add != null)
+						if (resultCoordinate != null)
 						{
 							addX = resultCoordinate.X;
 							addY = resultCoordinate.Y;

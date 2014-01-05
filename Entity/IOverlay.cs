@@ -9,8 +9,10 @@ namespace CirclePhysics.Entity
 		Coordinate ScreenPosition { get; }
 		Dictionary<string, ISprite> Sprites { get; }
 		ISprite CurrentSprite { get; }
+		bool IsDeleted { get; }
 
 		void Draw(IDrawer drawer);
+		void MarkForDeletion();
 		void Update();
 	}
 }
