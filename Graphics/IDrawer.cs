@@ -1,5 +1,5 @@
 ﻿using CirclePhysics.Physics;
-namespace CirclePhysics.Graphics.Interfaces
+namespace CirclePhysics.Graphics
 {
 	public interface IDrawer
 	{

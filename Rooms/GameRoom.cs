@@ -1,9 +1,8 @@
-﻿using CirclePhysics.Entity;
-using CirclePhysics.Physics;
-using System.Collections.Generic;
-using CirclePhysics.Graphics.Interfaces;
-using CirclePhysics.Graphics;
+﻿using System.Collections.Generic;
 using CirclePhysics.Controls;
+using CirclePhysics.Entity;
+using CirclePhysics.Graphics;
+using CirclePhysics.Physics;
 
 namespace CirclePhysics.Rooms
 {
@@ -33,7 +32,7 @@ namespace CirclePhysics.Rooms
 		public override void Update(int elapsedTime, CircleControls oldControls, CircleControls newControls)
 		{
 			if (newControls.HasFlag(CircleControls.Pause) && !oldControls.HasFlag(CircleControls.Pause))
-			{ _paused = !_paused; }
+				_paused = !_paused;
 
 			if (!_paused)
 			{
@@ -60,10 +59,10 @@ namespace CirclePhysics.Rooms
 				_player.SetScreenPosition(GetScreenPositionFromEntity(_player));
 
 				for (int i = 0; i < _entityList.Count; ++i)
-				{ _entityList[i].SetScreenPosition(_onScreen); }
+					_entityList[i].SetScreenPosition(_onScreen);
 
 				for (int i = 0; i < _surfaces.Count; ++i)
-				{ _surfaces[i].SetScreenPosition(_onScreen); }
+					_surfaces[i].SetScreenPosition(_onScreen);
 			}
 		}
 
@@ -72,10 +71,10 @@ namespace CirclePhysics.Rooms
 			//TODO background
 
 			for (int i = 0; i < _surfaces.Count; ++i)
-			{ _surfaces[i].Draw(drawer); }
+				_surfaces[i].Draw(drawer);
 
 			for (int i = 0; i < _entityList.Count; ++i)
-			{ _entityList[i].Draw(drawer); }
+				_entityList[i].Draw(drawer);
 
 			_player.Draw(drawer);
 		}

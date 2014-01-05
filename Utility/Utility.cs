@@ -1,12 +1,14 @@
-﻿using System;
-using CirclePhysics.Physics;
+﻿using CirclePhysics.Physics;
+using System;
 
 namespace CirclePhysics.Utility
 {
 	public static class Utility
 	{
 		public static Coordinate ToCoordinate(this GameVector vector)
-		{ return new Coordinate(vector.X, vector.Y); }
+		{
+			return new Coordinate(vector.X, vector.Y);
+		}
 
 		public static GameVector ToGameVector(this Coordinate coordinate)
 		{

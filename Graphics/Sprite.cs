@@ -1,11 +1,13 @@
-﻿using CirclePhysics.Graphics.Interfaces;
+﻿using CirclePhysics.Graphics;
 
-namespace CirclePhysics.Graphics.Implementations
+namespace CirclePhysics.Graphics
 {
 	public class Sprite : ISprite
 	{
 		public Sprite(IImage image)
-		{ Image = image; }
+		{
+			Image = image;
+		}
 
 		public IImage Image { get; private set; }
 

@@ -1,7 +1,6 @@
-﻿using CirclePhysics.Graphics.Interfaces;
+﻿using System.Collections.Generic;
+using CirclePhysics.Graphics;
 using CirclePhysics.Physics;
-using CirclePhysics.Physics.Interfaces;
-using System.Collections.Generic;
 
 namespace CirclePhysics.Entity
 {

@@ -1,6 +1,6 @@
-﻿using CirclePhysics.Graphics.Interfaces;
+﻿using System.Collections.Generic;
+using CirclePhysics.Graphics;
 using CirclePhysics.Physics;
-using System.Collections.Generic;
 using CirclePhysics.Utility;
 
 namespace CirclePhysics.Entity
@@ -45,23 +45,27 @@ namespace CirclePhysics.Entity
 			GameVector position = RoomPosition.ToGameVector();
 
 			if (position.Direction < lower.Direction)
-			{ _movingToHigher = true; }
+			{
+				_movingToHigher = true;
+			}
 			else if (position.Direction > higher.Direction)
-			{ _movingToHigher = false; }
+			{
+				_movingToHigher = false;
+			}
 			else // ==
 			{
 				if (RoomPosition.X <= _lowerPivot.X)
-				{ _movingToHigher = true; }
+					_movingToHigher = true;
 				else if (RoomPosition.X >= _higherPivot.X)
-				{ _movingToHigher = false; }
+					_movingToHigher = false;
 			}
 
 			GameVector difference;
 
 			if (_movingToHigher)
-			{ difference = (_higherPivot - _lowerPivot).ToGameVector(); }
+				difference = (_higherPivot - _lowerPivot).ToGameVector();
 			else
-			{ difference = (_lowerPivot - _higherPivot).ToGameVector(); }
+				difference = (_lowerPivot - _higherPivot).ToGameVector();
 
 			difference = new GameVector(difference.Magnitude * gameTime * 0.0001 * _speed, difference.Direction);
 

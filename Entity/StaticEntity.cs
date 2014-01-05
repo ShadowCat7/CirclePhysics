@@ -1,8 +1,7 @@
-﻿using CirclePhysics.Graphics.Interfaces;
-using CirclePhysics.Physics;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using CirclePhysics.Physics.Interfaces;
+using CirclePhysics.Graphics;
+using CirclePhysics.Physics;
 
 namespace CirclePhysics.Entity
 {
@@ -33,19 +32,19 @@ namespace CirclePhysics.Entity
 				{
 					int temp = (int)boundingCircles[i].Center.X - boundingCircles[i].Radius;
 					if (temp < xStart)
-					{ xStart = temp; }
+						xStart = temp;
 
 					temp = (int)boundingCircles[i].Center.X + boundingCircles[i].Radius;
 					if (temp > xEnd)
-					{ xEnd = temp; }
+						xEnd = temp;
 
 					temp = (int)boundingCircles[i].Center.Y - boundingCircles[i].Radius;
 					if (temp < yStart)
-					{ yStart = temp; }
+						yStart = temp;
 
 					temp = (int)boundingCircles[i].Center.Y + boundingCircles[i].Radius;
 					if (temp > yEnd)
-					{ yEnd = temp; }
+						yEnd = temp;
 				}
 
 				int radius = Math.Max((xEnd - xStart) / 2, (yEnd - yStart) / 2);

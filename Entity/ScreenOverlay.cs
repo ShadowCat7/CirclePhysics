@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using CirclePhysics.Graphics.Interfaces;
+using CirclePhysics.Graphics;
 using CirclePhysics.Physics;
 
 namespace CirclePhysics.Entity
@@ -26,21 +26,27 @@ namespace CirclePhysics.Entity
 		public ISprite GetSpriteFromDict(string spriteTag)
 		{
 			if (Sprites == null || Sprites.ContainsKey(spriteTag))
-			{ return null; }
+				return null;
 
 			return Sprites[spriteTag];
 		}
 
 		public ISprite CurrentSprite { get; private set; }
 		public void SetCurrentSprite(string key)
-		{ CurrentSprite = Sprites[key]; }
+		{
+			CurrentSprite = Sprites[key];
+		}
 
 		public bool IsDeleted { get; private set; }
 		public void MarkForDeletion()
-		{ IsDeleted = true; }
+		{
+			IsDeleted = true;
+		}
 
 		public virtual void Draw(IDrawer drawer)
-		{ drawer.Draw(CurrentSprite, ScreenPosition); }
+		{
+			drawer.Draw(CurrentSprite, ScreenPosition);
+		}
 
 		public virtual void Update() { }
 	}

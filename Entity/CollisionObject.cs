@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CirclePhysics.Graphics;
-using CirclePhysics.Graphics.Interfaces;
 using CirclePhysics.Physics;
-using CirclePhysics.Physics.Interfaces;
 using CirclePhysics.Rooms;
 
 namespace CirclePhysics.Entity
@@ -12,14 +10,18 @@ namespace CirclePhysics.Entity
 	{
 		protected CollisionObject(Coordinate roomPosition, Dictionary<string, ISprite> sprites, string startingSprite)
 			: base(null, sprites, startingSprite)
-		{ RoomPosition = roomPosition; }
+		{
+			RoomPosition = roomPosition;
+		}
 
 		public Coordinate RoomPosition { get; private set; }
 
 		public bool OnScreen { get; private set; }
 
 		protected virtual void Move(Coordinate newPosition)
-		{ RoomPosition = newPosition; }
+		{
+			RoomPosition = newPosition;
+		}
 
 		public override void SetScreenPosition(Coordinate positionOfScreen)
 		{
@@ -28,28 +30,28 @@ namespace CirclePhysics.Entity
 			if (CurrentSprite != null)
 			{
 				if (RoomPosition.X > positionOfScreen.X + Room.ViewPort.X)
-				{ OnScreen = false; }
+					OnScreen = false;
 				else if (RoomPosition.Y > positionOfScreen.Y + Room.ViewPort.Y)
-				{ OnScreen = false; }
+					OnScreen = false;
 				else if (RoomPosition.X + CurrentSprite.Image.Width < positionOfScreen.X)
-				{ OnScreen = false; }
+					OnScreen = false;
 				else if (RoomPosition.Y + CurrentSprite.Image.Height < positionOfScreen.Y)
-				{ OnScreen = false; }
+					OnScreen = false;
 				else
-				{ OnScreen = true; }
+					OnScreen = true;
 			}
 			else
 			{
 				if (RoomPosition.X > positionOfScreen.X + Room.ViewPort.X)
-				{ OnScreen = false; }
+					OnScreen = false;
 				else if (RoomPosition.Y > positionOfScreen.Y + Room.ViewPort.Y)
-				{ OnScreen = false; }
+					OnScreen = false;
 				else if (RoomPosition.X < positionOfScreen.X)
-				{ OnScreen = false; }
+					OnScreen = false;
 				else if (RoomPosition.Y < positionOfScreen.Y)
-				{ OnScreen = false; }
+					OnScreen = false;
 				else
-				{ OnScreen = true; }
+					OnScreen = true;
 			}
 		}
 

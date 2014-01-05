@@ -1,34 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using CirclePhysics.Physics.Interfaces;
+using CirclePhysics.Physics;
 
 namespace CirclePhysics.Physics
 {
 	public static class Collision
 	{
 		public static bool Test(IEntity entity1, ICollidable entity2)
-		{ return FindColliding(entity1, entity2) != null; }
+		{
+			return FindColliding(entity1, entity2) != null;
+		}
 
 		public static Coordinate FindColliding(IEntity tester, ICollidable testedAgainst)
 		{
 			if (testedAgainst is IEntity)
-			{ return FindCollision(tester, testedAgainst as IEntity); }
+				return FindCollision(tester, testedAgainst as IEntity);
 			else if (testedAgainst is ISurface)
-			{ return FindCollision(tester, testedAgainst as ISurface); }
-
-			return null;
+				return FindCollision(tester, testedAgainst as ISurface);
+			else
+				return null;
 		}
 
 		private static Coordinate FindCollision(IEntity tester, IEntity testedAgainst)
 		{
-			Coordinate temp = TestCircles(
-				new BoundingCircle(tester.BigBoundingCircle.Radius, tester.BigBoundingCircle.Center + tester.RoomPosition),
+			Coordinate temp = TestCircles(new BoundingCircle(tester.BigBoundingCircle.Radius, tester.BigBoundingCircle.Center + tester.RoomPosition),
 				new BoundingCircle(testedAgainst.BigBoundingCircle.Radius, testedAgainst.BigBoundingCircle.Center + testedAgainst.RoomPosition));
 
 			if (temp != null)
 			{
 				if (tester.BoundingCircles == null && testedAgainst.BoundingCircles == null)
-				{ return temp; }
+				{
+					return temp;
+				}
 				else
 				{
 					List<Coordinate> coordinates = new List<Coordinate>();
@@ -42,7 +45,7 @@ namespace CirclePhysics.Physics
 								new BoundingCircle(testedAgainst.BoundingCircles[i].Radius,
 								testedAgainst.BoundingCircles[i].Center + testedAgainst.RoomPosition));
 							if (temp != null)
-							{ coordinates.Add(temp); }
+								coordinates.Add(temp);
 						}
 					}
 					else if (testedAgainst.BoundingCircles == null)
@@ -54,7 +57,7 @@ namespace CirclePhysics.Physics
 								new BoundingCircle(testedAgainst.BigBoundingCircle.Radius,
 								testedAgainst.BigBoundingCircle.Center + testedAgainst.RoomPosition));
 							if (temp != null)
-							{ coordinates.Add(temp); }
+								coordinates.Add(temp);
 						}
 					}
 					else
@@ -68,15 +71,19 @@ namespace CirclePhysics.Physics
 									new BoundingCircle(testedAgainst.BoundingCircles[j].Radius,
 									testedAgainst.BoundingCircles[j].Center + testedAgainst.RoomPosition));
 								if (temp != null)
-								{ coordinates.Add(temp); }
+									coordinates.Add(temp);
 							}
 						}
 					}
 
 					if (coordinates.Count == 0)
-					{ return null; }
+					{
+						return null;
+					}
 					else if (coordinates.Count == 1)
-					{ return coordinates[0]; }
+					{
+						return coordinates[0];
+					}
 					else
 					{
 						double bestX = 0;
@@ -84,9 +91,9 @@ namespace CirclePhysics.Physics
 						for (int i = 0; i < coordinates.Count; ++i)
 						{
 							if (Math.Abs(bestX) < Math.Abs(coordinates[i].X))
-							{ bestX = coordinates[i].X; }
+								bestX = coordinates[i].X;
 							if (Math.Abs(bestY) < Math.Abs(coordinates[i].Y))
-							{ bestY = coordinates[i].Y; }
+								bestY = coordinates[i].Y;
 						}
 
 						return new Coordinate(bestX, bestY);
@@ -108,20 +115,25 @@ namespace CirclePhysics.Physics
 				return new Coordinate(Math.Cos(direction) * d, Math.Sin(direction) * d);
 			}
 			else
-			{ return null; }
+			{
+				return null;
+			}
 		}
 
 		public static double Distance(Coordinate c1, Coordinate c2)
-		{ return Math.Sqrt(Math.Pow(c2.X - c1.X, 2) + Math.Pow(c2.Y - c1.Y, 2)); }
+		{
+			return Math.Sqrt(Math.Pow(c2.X - c1.X, 2) + Math.Pow(c2.Y - c1.Y, 2));
+		}
 
 		private static Coordinate FindCollision(IEntity tester, ISurface surface)
 		{
-			Coordinate temp = TestCircleOnSurface(new BoundingCircle(tester.BigBoundingCircle.Radius,
-				tester.BigBoundingCircle.Center + tester.RoomPosition), surface);
+			Coordinate temp = TestCircleOnSurface(new BoundingCircle(tester.BigBoundingCircle.Radius, tester.BigBoundingCircle.Center + tester.RoomPosition), surface);
 			if (temp != null)
 			{
 				if (tester.BoundingCircles == null)
-				{ return temp; }
+				{
+					return temp;
+				}
 				else
 				{
 					List<Coordinate> coordinates = new List<Coordinate>();
@@ -130,13 +142,17 @@ namespace CirclePhysics.Physics
 						temp = TestCircleOnSurface(new BoundingCircle(tester.BoundingCircles[i].Radius,
 							tester.BoundingCircles[i].Center + tester.RoomPosition), surface);
 						if (temp != null)
-						{ coordinates.Add(temp); }
+							coordinates.Add(temp);
 					}
 
 					if (coordinates.Count == 0)
-					{ return null; }
+					{
+						return null;
+					}
 					else if (coordinates.Count == 1)
-					{ return coordinates[0]; }
+					{
+						return coordinates[0];
+					}
 					else
 					{
 						double bestX = 0;
@@ -144,9 +160,9 @@ namespace CirclePhysics.Physics
 						for (int i = 0; i < coordinates.Count; ++i)
 						{
 							if (Math.Abs(bestX) < Math.Abs(coordinates[i].X))
-							{ bestX = coordinates[i].X; }
+								bestX = coordinates[i].X;
 							if (Math.Abs(bestY) < Math.Abs(coordinates[i].Y))
-							{ bestY = coordinates[i].Y; }
+								bestY = coordinates[i].Y;
 						}
 
 						return new Coordinate(bestX, bestY);
@@ -154,7 +170,9 @@ namespace CirclePhysics.Physics
 				}
 			}
 			else
-			{ return null; }
+			{
+				return null;
+			}
 		}
 
 		private static Coordinate TestCircleOnSurface(BoundingCircle circle, ISurface surface)

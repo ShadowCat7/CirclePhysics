@@ -13,7 +13,7 @@ namespace CirclePhysics.Physics
 		public double Magnitude { get; private set; }
 		public double Direction { get; private set; }
 
-		public double X { get { return Magnitude * Math.Cos(Direction);} }
+		public double X { get { return Magnitude * Math.Cos(Direction); } }
 		public double Y { get { return Magnitude * Math.Sin(Direction); } }
 
 		public static GameVector operator +(GameVector v1, GameVector v2)

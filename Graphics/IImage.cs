@@ -1,4 +1,4 @@
-﻿namespace CirclePhysics.Graphics.Interfaces
+﻿namespace CirclePhysics.Graphics
 {
 	public interface IImage
 	{

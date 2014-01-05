@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using CirclePhysics.Graphics.Interfaces;
+using CirclePhysics.Graphics;
 using CirclePhysics.Physics;
 
 namespace CirclePhysics.Entity

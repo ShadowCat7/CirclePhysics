@@ -1,7 +1,6 @@
-﻿using CirclePhysics.Graphics.Interfaces;
-using CirclePhysics.Physics;
+﻿using CirclePhysics.Physics;
 
-namespace CirclePhysics.Graphics.Implementations
+namespace CirclePhysics.Graphics
 {
 	public class RepeatedSprite : ISprite
 	{

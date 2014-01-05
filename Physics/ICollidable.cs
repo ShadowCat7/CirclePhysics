@@ -1,4 +1,4 @@
-﻿namespace CirclePhysics.Physics.Interfaces
+﻿namespace CirclePhysics.Physics
 {
 	public interface ICollidable
 	{
